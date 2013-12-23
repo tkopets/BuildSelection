@@ -1,6 +1,9 @@
 import sublime
 import sublime_plugin
 import tempfile
+import time
+import os
+
 
 class BuildSelectionCommand(sublime_plugin.TextCommand):
     def run(self, edit):
@@ -25,7 +28,7 @@ class BuildSelectionCommand(sublime_plugin.TextCommand):
 
         # create temporary file
         tmp_file = tempfile.NamedTemporaryFile(delete=False)
-        tmp_file.write(content)
+        tmp_file.write(bytes(content, 'UTF-8'))
         tmp_file.close()
         # get settings (same as build system uses)
         setting = sublime.load_settings("BuildSelection.sublime-settings")
@@ -43,7 +46,8 @@ class BuildSelectionCommand(sublime_plugin.TextCommand):
 
         # print "executing command..."
         # run da command!
-        self.view.window().run_command("exec", {
+        self.view.window().run_command("exec",
+        {
             "cmd": cmd,
             "file_regex": file_regex,
             "line_regex": line_regex,
@@ -65,5 +69,4 @@ class BuildSelectionCommand(sublime_plugin.TextCommand):
 
 """ for testing:
     SELECT 1 as col1
-           ,1d as col2
 """
